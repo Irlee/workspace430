@@ -10,9 +10,6 @@ uint32_t cnt = 0;
 uint16_t fst_catch = 0;
 uint16_t sec_catch = 0;
 float freq = 0, Cx = 0;                     //555振荡频率，及对应电容值
-char LCD_Line1[16] = {'\0'};                //LCD第二列显示缓冲区
-char LCD_Line2[16] = {'\0'};                //LCD第二列显示缓冲区
-char clear[16] = "               ";         //16位空格
 float jiao = 0;                   //已校准的电容值
 float k = 0.9050, b = -3.7;     //校准系数k_initial=0.9050;b_initial = -3.67
 float k_adjusted = 0, b_adjusted = 0;   //校准系数读入缓存
@@ -28,7 +25,6 @@ int key[8] = {0};                 //键盘缓冲区
 #define R4_H P1OUT |= BIT0; P2OUT &= ~BIT0; P1OUT &= ~(BIT4|BIT5)       //P1.0
 
 void InitSystemClock(void);
-void LCD_fresh(void);
 
 /**
  * main.c
@@ -83,20 +79,8 @@ int main(void)
         {
             Cx = 1.44/(4.7 * freq) * 1000000;
             jiao = k * Cx + b;
-            //strcpy(LCD_Line1,clear);
-            //strcpy(LCD_Line2,clear);
-            //sprintf(LCD_Line1, "c=%dnF Cx=%dnF", (int)Cx, (int)jiao);
-            //afterk = (k-(int)k)*10000;
-            //afterb = (b-(int)b)*10;
-            //if(afterb < 0)
-            //    afterb = -afterb;
-            //sprintf(LCD_Line2, "k=%d.%d b=%d.%d", (int)k,(int)afterk,(int)b,(int)afterb);
+
         }
-        //else
-        //{
-        //    sprintf(LCD_Line1, "F=%dHz c=%dnF", 0, 0);
-        //    sprintf(LCD_Line2, "%d.%d %d.%d Cx=%d", 0,0,0,0,0);
-        //}
 
         UartSendString("F=", 2);
         PrintfFloat(freq);
@@ -105,9 +89,6 @@ int main(void)
         PrintfFloat(jiao);
         UartSendString("nF\n", 3);
 
-
-        //LCD_fresh();
-        //__delay_cycles(1000000);
     }
     return 0;
 }
